@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecyclerview;
+package com.tylersuehr.emptystaterecyclerexample;
 
 import org.junit.Test;
 
