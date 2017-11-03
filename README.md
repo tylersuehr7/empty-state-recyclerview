@@ -5,4 +5,4 @@ A highly customizable subclass of RecyclerView that draws state displays for loa
 
 <img src="https://github.com/tylersuehr7/empty-state-recyclerview/blob/master/docs/screen_single_list.png" width="200"> <img src="https://github.com/tylersuehr7/empty-state-recyclerview/blob/master/docs/screen_list.png" width="200"> <img src="https://github.com/tylersuehr7/empty-state-recyclerview/blob/master/docs/screen_card.png" width="200"> <img src="https://github.com/tylersuehr7/empty-state-recyclerview/blob/master/docs/screen_doc.png" width="200">
 
-<img src="https://github.com/tylersuehr7/empty-state-recyclerview/blob/master/docs/screen_empty.png" width="200"> <img src="https://github.com/tylersuehr7/empty-state-recyclerview/blob/master/docs/screen_anim.gif" width="200">
+<img src="https://github.com/tylersuehr7/empty-state-recyclerview/blob/master/docs/screen_anim.gif" width="200">
