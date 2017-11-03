@@ -2,9 +2,8 @@ package com.tylersuehr.emptystaterecyclerexample;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 import com.tylersuehr.emptystaterecycler.EmptyStateRecyclerView;
-import com.tylersuehr.emptystaterecycler.loading.AbstractContentLoadingState;
+import com.tylersuehr.emptystaterecycler.empty.CenterCropBitmapEmptyState;
 import com.tylersuehr.emptystaterecycler.loading.ContentLoadingStateFactory;
 
 /**
@@ -19,12 +18,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AbstractContentLoadingState state = ContentLoadingStateFactory.newListLoadingState(this);
-        state.setNumberOfContentItems(4);
-
         EmptyStateRecyclerView rv = (EmptyStateRecyclerView)findViewById(R.id.recycler);
-        rv.setStateDisplay(EmptyStateRecyclerView.STATE_LOADING, state);
+        rv.setStateDisplays(
+                new byte[] {
+                        EmptyStateRecyclerView.STATE_LOADING,
+                        EmptyStateRecyclerView.STATE_EMPTY
+                },
+                new EmptyStateRecyclerView.StateDisplay[] {
+                        ContentLoadingStateFactory.newDocLoadingState(this),
+                        new CenterCropBitmapEmptyState.Builder(this)
+                                .setImage(R.drawable.img_empty_state)
+                                .build()
+                });
 
+//        rv.invokeState(EmptyStateRecyclerView.STATE_LOADING);
         pretendRunLongTask(rv);
     }
 

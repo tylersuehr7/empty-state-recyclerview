@@ -159,7 +159,6 @@ public class EmptyStateRecyclerView extends RecyclerView {
         return onStateChangedListener;
     }
 
-
     /**
      * Defines methods for our states that will be drawn.
      */

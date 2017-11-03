@@ -44,4 +44,8 @@ public final class ContentLoadingStateFactory {
     public static AbstractContentLoadingState newCardLoadingState(Context c) {
         return new CardContentLoadingState(c);
     }
+
+    public static AbstractContentLoadingState newDocLoadingState(Context c) {
+        return new DocContentLoadingState(c);
+    }
 }
