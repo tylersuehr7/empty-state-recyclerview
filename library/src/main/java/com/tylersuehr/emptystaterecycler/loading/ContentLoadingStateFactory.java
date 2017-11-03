@@ -45,6 +45,13 @@ public final class ContentLoadingStateFactory {
         return new CardContentLoadingState(c);
     }
 
+    /**
+     * Creates new {@link AbstractContentLoadingState} that renders a document
+     * -like mockup content item.
+     *
+     * @param c {@link Context}
+     * @return {@link AbstractContentLoadingState}
+     */
     public static AbstractContentLoadingState newDocLoadingState(Context c) {
         return new DocContentLoadingState(c);
     }

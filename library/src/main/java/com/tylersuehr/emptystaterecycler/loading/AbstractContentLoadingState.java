@@ -6,10 +6,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.text.TextPaint;
-
 import com.tylersuehr.emptystaterecycler.EmptyStateRecyclerView;
 
 /**
@@ -28,40 +25,16 @@ import com.tylersuehr.emptystaterecycler.EmptyStateRecyclerView;
  * @version 1.0
  */
 public abstract class AbstractContentLoadingState implements EmptyStateRecyclerView.StateDisplay {
-    static final int DEFAULT_ANIM_DURATION = 900;
-    static final int DEFAULT_TEXT_COLOR = Color.BLACK;
-    static final float DEFAULT_TEXT_SIZE = 16f;
-
-    /* Properties for loading text drawing */
-    private boolean drawLoadingText = true;
-    private final TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
-    private Typeface loadingTextTypeface;
-    private float loadingTextSize;
-    private int loadingTextColor;
-    private String loadingText;
+    private static final int DEFAULT_ANIM_DURATION = 900;
 
     /* Properties for content loading drawing */
     private final Paint contentPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private boolean animateContentItems = true;
     private int numberOfContentItems = 3;
-    private int[] animationColors = new int[] { Color.LTGRAY, Color.GRAY };
     private ValueAnimator anim;
 
 
     AbstractContentLoadingState(Context c) {
-        // Setup loading text defaults
-        this.loadingTextTypeface = Typeface.DEFAULT;
-        this.loadingTextSize = DEFAULT_TEXT_SIZE * c.getResources().getDisplayMetrics().scaledDensity;
-        this.loadingTextColor = DEFAULT_TEXT_COLOR;
-        this.loadingText = "Loading";
-
-        // Setup loading text paint
-        this.textPaint.setColor(loadingTextColor);
-        this.textPaint.setTextSize(loadingTextSize);
-        this.textPaint.setTypeface(loadingTextTypeface);
-        this.textPaint.setTextAlign(Paint.Align.CENTER);
-
-        // Setup content paint
         onSetupContentPaint(c, contentPaint);
     }
 
@@ -71,15 +44,7 @@ public abstract class AbstractContentLoadingState implements EmptyStateRecyclerV
         final int height = rv.getMeasuredHeight();
 
         // Draw all of our content items
-        float dy = renderContent(numberOfContentItems, width, height, canvas, contentPaint);
-
-        // Draw our text under content items in vertical-center, if possible
-        if (drawLoadingText) {
-            canvas.drawText(loadingText,
-                    (width >> 1),
-                    dy += sizeOfContentItem(),
-                    textPaint);
-        }
+        renderContent(numberOfContentItems, width, height, canvas, contentPaint);
 
         // Setup and start animation, if possible
         if (animateContentItems) {
@@ -127,9 +92,8 @@ public abstract class AbstractContentLoadingState implements EmptyStateRecyclerV
      * @param availableHeight Height canvas real-estate
      * @param canvas {@link Canvas} to draw on
      * @param contentPaint {@link Paint} to draw with
-     * @return y-coordinate of last content item position
      */
-    protected abstract float renderContent(int numberOfContentItems,
+    protected abstract void renderContent(int numberOfContentItems,
                                            int availableWidth,
                                            int availableHeight,
                                            Canvas canvas,
@@ -143,77 +107,19 @@ public abstract class AbstractContentLoadingState implements EmptyStateRecyclerV
     protected abstract int sizeOfContentItem();
 
     /**
-     * Measures the width of the current set loading text.
-     * @return Width of loading text
+     * Sets if the content items will animate or not.
+     *
+     * @param animateContentItems True to animate content items
      */
-    protected float getTextWidth() {
-        return textPaint.measureText(loadingText);
-    }
-
-    /**
-     * Measures the font height metrics of the current text paint.
-     * @return Font height metrics
-     */
-    protected float getFontHeight() {
-        return (textPaint.descent() + textPaint.ascent());
-    }
-
-    // TODO: add documentation
-    public boolean isDrawLoadingText() {
-        return drawLoadingText;
-    }
-
-    public void setDrawLoadingText(boolean drawLoadingText) {
-        this.drawLoadingText = drawLoadingText;
-    }
-
-    public Typeface getLoadingTextTypeface() {
-        return loadingTextTypeface;
-    }
-
-    public void setLoadingTextTypeface(Typeface loadingTextTypeface) {
-        this.loadingTextTypeface = loadingTextTypeface;
-        this.textPaint.setTypeface(loadingTextTypeface);
-    }
-
-    public float getLoadingTextSize() {
-        return loadingTextSize;
-    }
-
-    public void setLoadingTextSize(float loadingTextSize) {
-        this.loadingTextSize = loadingTextSize;
-        this.textPaint.setTextSize(loadingTextSize);
-    }
-
-    public int getLoadingTextColor() {
-        return loadingTextColor;
-    }
-
-    public void setLoadingTextColor(int loadingTextColor) {
-        this.loadingTextColor = loadingTextColor;
-        this.textPaint.setColor(loadingTextColor);
-    }
-
-    public String getLoadingText() {
-        return loadingText;
-    }
-
-    public void setLoadingText(String loadingText) {
-        this.loadingText = loadingText;
-    }
-
-    public boolean isAnimateContentItems() {
-        return animateContentItems;
-    }
-
     public void setAnimateContentItems(boolean animateContentItems) {
         this.animateContentItems = animateContentItems;
     }
 
-    public int getNumberOfContentItems() {
-        return numberOfContentItems;
-    }
-
+    /**
+     * Sets the number of content items to draw.
+     *
+     * @param numberOfContentItems Number of content items displayed
+     */
     public void setNumberOfContentItems(int numberOfContentItems) {
         this.numberOfContentItems = numberOfContentItems;
     }

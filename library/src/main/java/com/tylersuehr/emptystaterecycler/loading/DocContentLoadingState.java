@@ -25,9 +25,6 @@ class DocContentLoadingState extends AbstractContentLoadingState {
 
     DocContentLoadingState(Context c) {
         super(c);
-        setDrawLoadingText(false);
-        setNumberOfContentItems(1);
-
         DisplayMetrics dm = c.getResources().getDisplayMetrics();
         this.large = (int)(16f * dm.density);
 
@@ -41,7 +38,7 @@ class DocContentLoadingState extends AbstractContentLoadingState {
     }
 
     @Override
-    protected float renderContent(int numberOfContentItems, int availableWidth, int availableHeight, Canvas canvas, Paint contentPaint) {
+    protected void renderContent(int numberOfContentItems, int availableWidth, int availableHeight, Canvas canvas, Paint contentPaint) {
         float dy = 0;
 
         // Since we're only incrementing the y-coordinate, we can allocate for
@@ -72,8 +69,6 @@ class DocContentLoadingState extends AbstractContentLoadingState {
                 lineWidth - (lineWidth / 4),
                 dy + lineHeight,
                 contentPaint);
-
-        return (dy + lineHeight + large);
     }
 
     @Override

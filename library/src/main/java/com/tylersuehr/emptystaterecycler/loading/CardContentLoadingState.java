@@ -28,7 +28,6 @@ class CardContentLoadingState extends AbstractContentLoadingState {
 
     CardContentLoadingState(Context c) {
         super(c);
-        setDrawLoadingText(false);
         setNumberOfContentItems(2);
 
         DisplayMetrics dm = c.getResources().getDisplayMetrics();
@@ -45,7 +44,7 @@ class CardContentLoadingState extends AbstractContentLoadingState {
     }
 
     @Override
-    protected float renderContent(int numberOfContentItems, int availableWidth, int availableHeight, Canvas canvas, Paint contentPaint) {
+    protected void renderContent(int numberOfContentItems, int availableWidth, int availableHeight, Canvas canvas, Paint contentPaint) {
         final int radius = (circleSize >> 1);
         final int verticalDistance = sizeOfContentItem();
 
@@ -82,8 +81,6 @@ class CardContentLoadingState extends AbstractContentLoadingState {
                         contentPaint);
             }
         }
-
-        return (dy - verticalDistance) - getFontHeight() + lineHeight + large;
     }
 
     @Override

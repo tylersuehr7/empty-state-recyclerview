@@ -29,8 +29,6 @@ class ListContentLoadingState extends AbstractContentLoadingState {
 
     ListContentLoadingState(Context c) {
         super(c);
-        setDrawLoadingText(false);
-
         DisplayMetrics dm = c.getResources().getDisplayMetrics();
         this.small = (int)(8f * dm.density);
         this.large = (int)(16f * dm.density);
@@ -46,7 +44,7 @@ class ListContentLoadingState extends AbstractContentLoadingState {
     }
 
     @Override
-    protected float renderContent(int numberOfContentItems, int availableWidth, int availableHeight, Canvas canvas, Paint contentPaint) {
+    protected void renderContent(int numberOfContentItems, int availableWidth, int availableHeight, Canvas canvas, Paint contentPaint) {
         final int radius = (circleSize >> 1);
         final int verticalDistance = sizeOfContentItem();
 
@@ -83,8 +81,6 @@ class ListContentLoadingState extends AbstractContentLoadingState {
                     contentPaint
             );
         }
-
-        return dy;
     }
 
     @Override
