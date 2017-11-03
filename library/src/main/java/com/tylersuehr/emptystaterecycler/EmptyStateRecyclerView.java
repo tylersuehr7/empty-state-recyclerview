@@ -50,12 +50,9 @@ public class EmptyStateRecyclerView extends RecyclerView {
         super(c, attrs, defStyle);
 
         // Setup default states
-        this.stateDisplays.put(STATE_LOADING, new DefaultStateDisplay
-                .Builder(c).setText("Loading...").build());
-        this.stateDisplays.put(STATE_EMPTY, new DefaultStateDisplay
-                .Builder(c).setText("No content").build());
-        this.stateDisplays.put(STATE_ERROR, new DefaultStateDisplay
-                .Builder(c).setText("Error :(").build());
+        this.stateDisplays.put(STATE_LOADING, new DefaultLoadingState(c, "Loading..."));
+        this.stateDisplays.put(STATE_EMPTY, new DefaultEmptyState(c, "No Content", "AWWW...!"));
+        this.stateDisplays.put(STATE_ERROR, new DefaultEmptyState(c, "Something Went Wrong", "SORRY...!"));
     }
 
     @Override
@@ -149,6 +146,38 @@ public class EmptyStateRecyclerView extends RecyclerView {
         if (onStateChangedListener != null) {
             this.onStateChangedListener.onStateChanged(state);
         }
+    }
+
+    /**
+     * Checks if the current state is the empty state.
+     * @return True if empty state
+     */
+    public boolean isEmptyState() {
+        return (state == STATE_EMPTY);
+    }
+
+    /**
+     * Checks if the current state is the error state.
+     * @return True if empty state
+     */
+    public boolean isErrorState() {
+        return (state == STATE_ERROR);
+    }
+
+    /**
+     * Checks if the current state is the loading state.
+     * @return True if empty state
+     */
+    public boolean isLoadingState() {
+        return (state == STATE_LOADING);
+    }
+
+    /**
+     * Checks if the current state is the ok state.
+     * @return True if empty state
+     */
+    public boolean isOkState() {
+        return (state == STATE_OK);
     }
 
     public void setOnStateChangedListener(OnStateChangedListener listener) {
