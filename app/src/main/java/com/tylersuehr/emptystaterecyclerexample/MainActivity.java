@@ -19,8 +19,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         EmptyStateRecyclerView rv = (EmptyStateRecyclerView)findViewById(R.id.recycler);
-//        rv.invokeState(EmptyStateRecyclerView.STATE_EMPTY);
-//        rv.invokeState(EmptyStateRecyclerView.STATE_LOADING);
+        // setup any states here...
+
         pretendRunLongTask(rv);
     }
 
