@@ -2,9 +2,11 @@ package com.tylersuehr.emptystaterecyclerexample;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
+
+import com.tylersuehr.emptystaterecycler.ImageStateDisplay;
 import com.tylersuehr.emptystaterecycler.EmptyStateRecyclerView;
-import com.tylersuehr.emptystaterecycler.DefaultEmptyState;
-import com.tylersuehr.emptystaterecycler.DefaultLoadingState;
+import com.tylersuehr.emptystaterecycler.TextStateDisplay;
 
 /**
  * Copyright © 2017 Tyler Suehr
@@ -21,7 +23,10 @@ public class MainActivity extends AppCompatActivity {
         EmptyStateRecyclerView rv = (EmptyStateRecyclerView)findViewById(R.id.recycler);
         // setup any states here...
 
-        pretendRunLongTask(rv);
+        rv.setStateDisplay(EmptyStateRecyclerView.STATE_EMPTY,
+                new TextStateDisplay(this, "Empty Content!", "Easy goes the content that is not here because it was not existent on the server!"));
+        rv.invokeState(EmptyStateRecyclerView.STATE_EMPTY);
+//        pretendRunLongTask(rv);
     }
 
     private void pretendRunLongTask(final EmptyStateRecyclerView rv) {
