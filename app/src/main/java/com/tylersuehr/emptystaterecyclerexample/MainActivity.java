@@ -1,12 +1,10 @@
 package com.tylersuehr.emptystaterecyclerexample;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 import com.tylersuehr.emptystaterecycler.ContentItemLoadingStateFactory;
 import com.tylersuehr.emptystaterecycler.EmptyStateRecyclerView;
-import com.tylersuehr.emptystaterecycler.ImageTextStateDisplay;
+import com.tylersuehr.emptystaterecycler.TextStateDisplay;
 
 /**
  * Copyright © 2017 Tyler Suehr
@@ -26,8 +24,9 @@ public class MainActivity extends AppCompatActivity {
         rv.setStateDisplay(EmptyStateRecyclerView.STATE_LOADING,
                 ContentItemLoadingStateFactory.newListLoadingState(this));
         rv.setStateDisplay(EmptyStateRecyclerView.STATE_EMPTY,
-                new ImageTextStateDisplay(this, R.drawable.img_coffee,
-                        "No coffee yet!", "Purchase some coffee to display."));
+                new TextStateDisplay(this, "No content yet", "Please join or create some content."));
+        rv.setStateDisplay(EmptyStateRecyclerView.STATE_ERROR,
+                new TextStateDisplay(this, "SORRY...!", "Something went wrong :("));
 
         pretendRunLongTask(rv);
     }
@@ -37,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                rv.invokeState(EmptyStateRecyclerView.STATE_EMPTY);
+                rv.invokeState(EmptyStateRecyclerView.STATE_ERROR);
             }
         }, 5000);
     }

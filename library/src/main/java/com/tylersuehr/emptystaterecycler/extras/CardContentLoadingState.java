@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecycler.loading;
+package com.tylersuehr.emptystaterecycler.extras;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;

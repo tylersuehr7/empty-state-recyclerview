@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecycler.loading;
+package com.tylersuehr.emptystaterecycler.extras;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
