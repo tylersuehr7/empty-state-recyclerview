@@ -70,7 +70,7 @@ public class TextStateDisplay extends AbstractStateDisplay {
                 1.0f, 0, false);
 
         // Setup subtitle defaults
-        this.subtitlePaint.setTextSize(16f * dm.scaledDensity);
+        this.subtitlePaint.setTextSize(14f * dm.scaledDensity);
         this.subtitlePaint.setTextAlign(Paint.Align.CENTER);
         this.subtitlePaint.setColor(Color.GRAY);
         this.subtitle = subtitle;
