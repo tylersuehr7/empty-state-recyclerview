@@ -65,3 +65,12 @@ Method | Summary
 `isOkState()` | True if the current invoked state is the ok state.
 `setOnStateChangedListener(OnStateChangedListener)` | Sets an observer for state changes.
 `getOnStateChangedListener()` | Gets the observer watching state changes.
+
+### Associated Objects
+There are two internal components associated with the `EmptyStateRecyclerView`:
+
+(1) `OnStateChangedListener`
+This interface is used to provide an observer for callback events regarding changes to the `EmptyStateRecyclerView`'s state.
+
+(2) `StateDisplay`
+This interface is used by `EmptyStateRecyclerView` to draw content to the screen for a state.
