@@ -13,6 +13,25 @@ Here's some of the core features of this library:
 * Very lightweight, memory, and processing efficient as opposed to other alternatives
 * Very customizable
 
+How to use it...
+
+In your project level build.gradle :
+```java
+allprojects {
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
+} 
+```
+
+In your app level build.gradle:
+```java
+dependencies {
+    compile 'com.github.tylersuehr7:empty-state-recyclerview:1.0.3'
+}  
+```
+
 ## Using the Empty State RecyclerView
 The basic usage of this library is to distract the user while data is being fetched/loaded in the background. The user can be distracted with text or a neat animation that is customizable to your liking
 
