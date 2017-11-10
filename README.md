@@ -84,12 +84,29 @@ There is a base semi-concrete `StateDisplay` implementation in the repository th
 
 Here is a simple example:
 ```java
-public class ExampleStateDisplay extends AbstractStateDisplay {
-        // ...any properties needed to perform drawing logic
+public class ExampleEmptyStateDisplay extends AbstractStateDisplay {
+    // ...any properties needed to perform drawing logic
         
-        @Override
-        public void onDrawState(EmptyStateRecyclerView rv, Canvas canvas) {
-                // ... any cool drawing logic on the Canvas
-        }
+    @Override
+    public void onDrawState(EmptyStateRecyclerView rv, Canvas canvas) {
+            // ... any cool drawing logic on the Canvas
+    }
+}
+```
+
+### Using your custom state display
+You can easily use your custom state display by setting the display for the state that you want the `EmptyStateRecyclerView` to show it for when invoked for that state. Here's a simple example using the custom state display above:
+```java
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    
+    EmptyStateRecyclerView rv = new EmptyStateRecyclerView(this);
+    
+    // Set your custom state display for the desired state
+    rv.setStateDisplay(EmptyStateRecyclerView.STATE_EMPTY, new ExampleEmptyStateDisplay());
+    rv.invokeState(EmptyStateRecyclerView.STATE_EMPTY);
+    
+    setContentView(rv);
 }
 ```
