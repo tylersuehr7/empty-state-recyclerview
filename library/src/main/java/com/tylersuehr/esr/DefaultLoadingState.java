@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecycler;
+package com.tylersuehr.esr;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
-import com.tylersuehr.emptystaterecycler.EmptyStateRecyclerView;
 
 /**
  * Copyright © 2017 Tyler Suehr

@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecycler;
+package com.tylersuehr.esr;
 
 /**
  * Copyright © 2017 Tyler Suehr

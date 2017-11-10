@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecycler.extras;
+package com.tylersuehr.esr.extras;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,16 +10,15 @@ import android.util.DisplayMetrics;
  * Copyright © 2017 Tyler Suehr
  *
  * This subclass of {@link AbstractContentLoadingState} draws content items that
- * look like single image, double lines mockup items.
+ * look like single image, single line mockup items.
  *
  * See for details: https://material.io/guidelines/components/lists.html#
  *
  * @author Tyler Suehr
  * @version 1.0
  */
-class ListContentLoadingState extends AbstractContentLoadingState {
+class SingleListContentLoadingState extends AbstractContentLoadingState {
     /* Immutable constants */
-    private final int small;
     private final int large;
 
     /* Used for list item sizing */
@@ -27,10 +26,9 @@ class ListContentLoadingState extends AbstractContentLoadingState {
     private int lineHeight;
 
 
-    ListContentLoadingState(Context c) {
+    SingleListContentLoadingState(Context c) {
         super(c);
         DisplayMetrics dm = c.getResources().getDisplayMetrics();
-        this.small = (int)(8f * dm.density);
         this.large = (int)(16f * dm.density);
 
         // Setup list content item defaults
@@ -58,7 +56,7 @@ class ListContentLoadingState extends AbstractContentLoadingState {
             // Draw the image placeholder
             canvas.drawCircle(dx, dy, radius, contentPaint);
 
-            int diff = (circleSize - (lineHeight * 2 + small)) >> 1;
+            int diff = (circleSize - lineHeight) >> 1;
 
             // Draw the first long line
             dx += radius + large;
@@ -67,16 +65,6 @@ class ListContentLoadingState extends AbstractContentLoadingState {
                     dx,
                     dy,
                     dx + (availableWidth - dx - (large << 1)),
-                    dy + lineHeight,
-                    contentPaint
-            );
-
-            // Draw the second semi-long line
-            dy += lineHeight + small;
-            canvas.drawRect(
-                    dx,
-                    dy,
-                    dx + (availableWidth - dx - (large << 3)),
                     dy + lineHeight,
                     contentPaint
             );

@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecyclerexample;
+package com.tylersuehr.esrexample;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

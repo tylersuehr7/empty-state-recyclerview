@@ -1,10 +1,10 @@
-package com.tylersuehr.emptystaterecyclerexample;
+package com.tylersuehr.esrexample;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import com.tylersuehr.emptystaterecycler.ContentItemLoadingStateFactory;
-import com.tylersuehr.emptystaterecycler.EmptyStateRecyclerView;
-import com.tylersuehr.emptystaterecycler.TextStateDisplay;
+import com.tylersuehr.esr.ContentItemLoadingStateFactory;
+import com.tylersuehr.esr.EmptyStateRecyclerView;
+import com.tylersuehr.esr.TextStateDisplay;
 
 /**
  * Copyright © 2017 Tyler Suehr

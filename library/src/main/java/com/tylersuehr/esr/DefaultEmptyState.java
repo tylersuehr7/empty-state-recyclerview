@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecycler;
+package com.tylersuehr.esr;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
-import com.tylersuehr.emptystaterecycler.EmptyStateRecyclerView;
 
 /**
  * Copyright © 2017 Tyler Suehr

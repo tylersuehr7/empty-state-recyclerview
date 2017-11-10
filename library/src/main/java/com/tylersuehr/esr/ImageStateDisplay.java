@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecycler;
+package com.tylersuehr.esr;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecycler.extras;
+package com.tylersuehr.esr.extras;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,15 +10,16 @@ import android.util.DisplayMetrics;
  * Copyright © 2017 Tyler Suehr
  *
  * This subclass of {@link AbstractContentLoadingState} draws content items that
- * look like single image multi-lines card mockup items.
+ * look like single image, double lines mockup items.
  *
- * See for details: https://material.io/guidelines/components/cards.html
+ * See for details: https://material.io/guidelines/components/lists.html#
  *
  * @author Tyler Suehr
  * @version 1.0
  */
-class CardContentLoadingState extends AbstractContentLoadingState {
+class ListContentLoadingState extends AbstractContentLoadingState {
     /* Immutable constants */
+    private final int small;
     private final int large;
 
     /* Used for list item sizing */
@@ -26,11 +27,10 @@ class CardContentLoadingState extends AbstractContentLoadingState {
     private int lineHeight;
 
 
-    CardContentLoadingState(Context c) {
+    ListContentLoadingState(Context c) {
         super(c);
-        setNumberOfContentItems(2);
-
         DisplayMetrics dm = c.getResources().getDisplayMetrics();
+        this.small = (int)(8f * dm.density);
         this.large = (int)(16f * dm.density);
 
         // Setup list content item defaults
@@ -52,39 +52,39 @@ class CardContentLoadingState extends AbstractContentLoadingState {
         float dy = 0;
 
         for (int i = 0; i < numberOfContentItems; i++) {
-            // Draw the circle in the top-left side
             dx = radius + large;
             dy = i * verticalDistance + radius + large;
+
+            // Draw the image placeholder
             canvas.drawCircle(dx, dy, radius, contentPaint);
 
-            // Draw a short line to the right vertical-center of circle
-            int offset = (circleSize - lineHeight) >> 1;
+            int diff = (circleSize - (lineHeight * 2 + small)) >> 1;
+
+            // Draw the first long line
             dx += radius + large;
-            dy -= radius - offset;
+            dy -= radius - diff;
             canvas.drawRect(
                     dx,
                     dy,
-                    dx + radius + (availableWidth >> 2),
+                    dx + (availableWidth - dx - (large << 1)),
                     dy + lineHeight,
-                    contentPaint);
+                    contentPaint
+            );
 
-            // Draw a 4 long lines under the circle, following under each other
-            final int longLineDistance = (lineHeight + large);
-            for (int j = 0; j < 4; j++) {
-                dx = large;
-                dy = j * longLineDistance + ((i * verticalDistance) + circleSize + (large << 1));
-                canvas.drawRect(
-                        dx,
-                        dy,
-                        dx + (availableWidth - (large << (j == 3 ? 3 : 1))),
-                        dy + lineHeight,
-                        contentPaint);
-            }
+            // Draw the second semi-long line
+            dy += lineHeight + small;
+            canvas.drawRect(
+                    dx,
+                    dy,
+                    dx + (availableWidth - dx - (large << 3)),
+                    dy + lineHeight,
+                    contentPaint
+            );
         }
     }
 
     @Override
     protected int sizeOfContentItem() {
-        return circleSize + (6 * large) + (4 * lineHeight);
+        return (circleSize + large);
     }
 }

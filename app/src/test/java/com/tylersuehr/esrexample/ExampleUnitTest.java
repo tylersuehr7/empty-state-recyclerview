@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecyclerexample;
+package com.tylersuehr.esrexample;
 
 import org.junit.Test;
 

@@ -1,32 +1,30 @@
-package com.tylersuehr.emptystaterecycler;
+package com.tylersuehr.esr;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewCompat;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * Subclass of {@link AbstractStateDisplay} that contains properties for two texts (one above
- * the other one), a title and a subtitle perhaps, and affords an API to draw and manipulate
- * them.
- *
  * @author Tyler Suehr
  * @version 1.0
  */
-public class TextStateDisplay extends AbstractStateDisplay {
-    private boolean textLayoutsConfigured = false;
+public class ImageTextStateDisplay extends AbstractStateDisplay {
+    private final int sixteenDp;
+
+    private boolean configured = false;
 
     /* Properties for the title text */
     private final TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
@@ -38,23 +36,32 @@ public class TextStateDisplay extends AbstractStateDisplay {
     private StaticLayout subtitleLayout;
     private String subtitle;
 
-    /* Stores the gravity for the text */
-    private int textGravity = Gravity.CENTER;
+    /* Properties for the image */
+    private Bitmap image;
     /* Space between the title and subtitle texts */
     private int titleSpacing;
+    /* Space between the text and image */
+    private int textImageSpacing;
+    /* True if the text should be drawn above the image */
+    private boolean drawTextFirst = false;
 
 
-    public TextStateDisplay(Context c) {
-        this(c, "", "");
+    public ImageTextStateDisplay(Context c, @DrawableRes int res) {
+        this(c, res, "", "");
     }
 
-    public TextStateDisplay(Context c, @NonNull String title, @Nullable String subtitle) {
+    public ImageTextStateDisplay(Context c, @DrawableRes int res, @NonNull String title, @Nullable String subtitle) {
+        this(c, BitmapFactory.decodeResource(c.getResources(), res), title, subtitle);
+    }
+
+    public ImageTextStateDisplay(Context c, @NonNull Bitmap bitmap, @NonNull String title, @Nullable String subtitle) {
         DisplayMetrics dm = c.getResources().getDisplayMetrics();
+        this.sixteenDp = (int)(16f * dm.density);
 
         // Setup default sizes
-        final int large = (int)(16f * dm.density);
-        setPadding(large, large, large, large);
+        setPadding(sixteenDp, sixteenDp, sixteenDp, sixteenDp);
         this.titleSpacing = (int)(4f * dm.scaledDensity);
+        this.textImageSpacing = sixteenDp;
 
         // Setup title defaults
         this.titlePaint.setTextAlign(Paint.Align.CENTER);
@@ -73,89 +80,31 @@ public class TextStateDisplay extends AbstractStateDisplay {
         this.subtitlePaint.setTextSize(14f * dm.scaledDensity);
         this.subtitlePaint.setTextAlign(Paint.Align.CENTER);
         this.subtitlePaint.setColor(Color.GRAY);
-        this.subtitle = subtitle;
+        this.subtitle = (subtitle == null ? "Dank yo hommie future is a rapper sdlkfjsldjfslkdjfsldjfasdjfasljdfasjdflasjdflsajd" : subtitle);
 
         // Default to a single line of text
-        this.subtitleLayout = new StaticLayout(subtitle,
+        this.subtitleLayout = new StaticLayout(this.subtitle,
                 subtitlePaint,
-                (int)subtitlePaint.measureText(subtitle),
+                (int)subtitlePaint.measureText(this.subtitle),
                 Layout.Alignment.ALIGN_NORMAL,
                 1.0f, 0, false);
+
+        this.image = bitmap;
     }
 
     @Override
     public void onDrawState(EmptyStateRecyclerView rv, Canvas canvas) {
-        final int width = rv.getMeasuredWidth();
-        final int height = rv.getMeasuredHeight();
-        configureTextLayouts(width);
-
-        // Account for vertical text gravity
-        final int verticalGravity = textGravity&Gravity.VERTICAL_GRAVITY_MASK;
-        float dy;
-        switch (verticalGravity) {
-            case Gravity.CENTER_VERTICAL:
-                dy = (height >> 1) - ((int)getFullTextHeight() >> 1);
-                break;
-            case Gravity.BOTTOM:
-                dy = height - getFullTextHeight();
-                break;
-            default:
-            case Gravity.TOP:
-                dy = 0;
-                break;
+        if (drawTextFirst) {
+            drawTextFirst(rv, canvas);
+        } else {
+            drawImageFirst(rv, canvas);
         }
-        dy += getPaddingTop();
-
-        final int horizontalGravity = Gravity.getAbsoluteGravity(textGravity,
-                ViewCompat.getLayoutDirection(rv))&Gravity.HORIZONTAL_GRAVITY_MASK;
-
-        // Draw the title text
-        canvas.save();
-        canvas.translate(
-                getDx(width, horizontalGravity, titlePaint, titleLayout),
-                dy);
-        this.titleLayout.draw(canvas);
-        canvas.restore();
-
-        // Add spacing for under the text with the title spacing
-        dy += titleLayout.getHeight() + titleSpacing;
-
-        // Draw the subtitle text under the title text
-        canvas.save();
-        canvas.translate(
-                getDx(width, horizontalGravity, subtitlePaint, subtitleLayout),
-                dy);
-        this.subtitleLayout.draw(canvas);
-        canvas.restore();
     }
 
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
         super.setPadding(left, top, right, bottom);
-        invalidateText();
-    }
-
-    /**
-     * Sets the overall alignment for the text (supports all gravity variations
-     * except for RIGHT and END).
-     * @param gravity Text gravity
-     */
-    public void setTextGravity(int gravity) {
-        // Let's adjust paint alignment to fit horizontal gravity (END not supported)
-        final int horizontalGravity = Gravity.getAbsoluteGravity(gravity,
-                ViewCompat.LAYOUT_DIRECTION_LTR)&Gravity.HORIZONTAL_GRAVITY_MASK;
-        switch (horizontalGravity) {
-            case GravityCompat.START:
-                this.titlePaint.setTextAlign(Paint.Align.LEFT);
-                this.subtitlePaint.setTextAlign(Paint.Align.LEFT);
-                break;
-            case Gravity.CENTER_HORIZONTAL:
-                this.titlePaint.setTextAlign(Paint.Align.CENTER);
-                this.subtitlePaint.setTextAlign(Paint.Align.CENTER);
-                break;
-        }
-        this.textGravity = gravity;
-        // No invalidation needed
+        invalidateConfig();
     }
 
     /**
@@ -173,7 +122,7 @@ public class TextStateDisplay extends AbstractStateDisplay {
      */
     public void setTitleTextColor(@ColorInt int color) {
         this.titlePaint.setColor(color);
-        invalidateText();
+        invalidateConfig();
     }
 
     /**
@@ -182,7 +131,7 @@ public class TextStateDisplay extends AbstractStateDisplay {
      */
     public void setTitleTextSize(float textSize) {
         this.titlePaint.setTextSize(textSize);
-        invalidateText();
+        invalidateConfig();
     }
 
     /**
@@ -191,7 +140,7 @@ public class TextStateDisplay extends AbstractStateDisplay {
      */
     public void setTitleTextAlign(Paint.Align align) {
         this.titlePaint.setTextAlign(align);
-        invalidateText();
+        invalidateConfig();
     }
 
     /**
@@ -200,7 +149,7 @@ public class TextStateDisplay extends AbstractStateDisplay {
      */
     public void setTitle(String title) {
         this.title = title;
-        invalidateText();
+        invalidateConfig();
     }
 
     /**
@@ -209,7 +158,7 @@ public class TextStateDisplay extends AbstractStateDisplay {
      */
     public void setSubtitleTextColor(@ColorInt int color) {
         this.subtitlePaint.setColor(color);
-        invalidateText();
+        invalidateConfig();
     }
 
     /**
@@ -218,7 +167,7 @@ public class TextStateDisplay extends AbstractStateDisplay {
      */
     public void setSubtitleTextSize(float textSize) {
         this.subtitlePaint.setTextSize(textSize);
-        invalidateText();
+        invalidateConfig();
     }
 
     /**
@@ -227,7 +176,7 @@ public class TextStateDisplay extends AbstractStateDisplay {
      */
     public void setSubtitleTextAlign(Paint.Align align) {
         this.subtitlePaint.setTextAlign(align);
-        invalidateText();
+        invalidateConfig();
     }
 
     /**
@@ -236,7 +185,7 @@ public class TextStateDisplay extends AbstractStateDisplay {
      */
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
-        invalidateText();
+        invalidateConfig();
     }
 
     /**
@@ -246,11 +195,97 @@ public class TextStateDisplay extends AbstractStateDisplay {
     public void setTypeface(Typeface typeface) {
         this.titlePaint.setTypeface(typeface);
         this.subtitlePaint.setTypeface(typeface);
-        invalidateText();
+        invalidateConfig();
     }
 
-    private void invalidateText() {
-        this.textLayoutsConfigured = false;
+    public void setImage(Bitmap bitmap) {
+        this.image = bitmap;
+        invalidateConfig();
+    }
+
+    public void setImage(Context c, @DrawableRes int res) {
+        this.image = BitmapFactory.decodeResource(c.getResources(), res);
+        invalidateConfig();
+    }
+
+    public void setTextImageSpacing(int spacing) {
+        this.textImageSpacing = spacing;
+        invalidateConfig();
+    }
+
+    public void setDrawTextFirst(boolean value) {
+        this.drawTextFirst = value;
+    }
+
+    private void drawImageFirst(EmptyStateRecyclerView rv, Canvas canvas) {
+        final int width = rv.getMeasuredWidth();
+        final int height = rv.getMeasuredHeight();
+        configure(width);
+
+        float dy = (height >> 1) - ((image.getHeight() + sixteenDp + (int)getFullTextHeight()) >> 1);
+        canvas.drawBitmap(image,
+                (width >> 1) - ((image.getWidth() >> 1)),
+                dy,
+                null);
+
+        dy += image.getHeight() + textImageSpacing;
+
+        // Draw the title text
+        canvas.save();
+        canvas.translate(
+                (width >> 1),
+                dy);
+        this.titleLayout.draw(canvas);
+        canvas.restore();
+
+        // Add spacing for under the text with the title spacing
+        dy += titleLayout.getHeight() + titleSpacing;
+
+        // Draw the subtitle text under the title text
+        canvas.save();
+        canvas.translate(
+                (width >> 1),
+                dy);
+        this.subtitleLayout.draw(canvas);
+        canvas.restore();
+    }
+
+    private void drawTextFirst(EmptyStateRecyclerView rv, Canvas canvas) {
+        final int width = rv.getMeasuredWidth();
+        final int height = rv.getMeasuredHeight();
+        configure(width);
+
+        float dy = (height >> 1) - ((image.getHeight() + sixteenDp + (int)getFullTextHeight()) >> 1);
+
+        // Draw the title text
+        canvas.save();
+        canvas.translate(
+                (width >> 1),
+                dy);
+        this.titleLayout.draw(canvas);
+        canvas.restore();
+
+        // Add spacing for under the text with the title spacing
+        dy += titleLayout.getHeight() + titleSpacing;
+
+        // Draw the subtitle text under the title text
+        canvas.save();
+        canvas.translate(
+                (width >> 1),
+                dy);
+        this.subtitleLayout.draw(canvas);
+        canvas.restore();
+
+        dy += subtitleLayout.getHeight() + textImageSpacing;
+
+        canvas.drawBitmap(image,
+                (width >> 1) - ((image.getWidth() >> 1)),
+                dy,
+                null);
+    }
+
+    private void invalidateConfig() {
+        this.configured = false;
     }
 
     private float getFullTextHeight() {
@@ -259,26 +294,8 @@ public class TextStateDisplay extends AbstractStateDisplay {
                 + titleSpacing + getPaddingTop() + getPaddingBottom(); // Spacing with top & bottom padding
     }
 
-    private float getDx(final int width,
-                        final int horizontalGravity,
-                        final Paint paint,
-                        final StaticLayout layout) {
-        final boolean centered = paint.getTextAlign() == Paint.Align.CENTER;
-        final float dx;
-        switch (horizontalGravity) { // No support for GravityCompat.END
-            case Gravity.CENTER_HORIZONTAL:
-                dx = (width >> 1) - (centered ? 0 : (layout.getWidth() >> 1) - getPaddingLeft());
-                break;
-            default:
-            case GravityCompat.START:
-                dx = getPaddingLeft();
-                break;
-        }
-        return dx;
-    }
-
-    private void configureTextLayouts(final int availableWidth) {
-        if (!textLayoutsConfigured) {
+    private void configure(final int availableWidth) {
+        if (!configured) {
             final int totalNeededPadding = getPaddingLeft() + getPaddingRight();
 
             // Create new static layout only if needed!
@@ -299,7 +316,10 @@ public class TextStateDisplay extends AbstractStateDisplay {
                         1.15f, 0, false);
             }
 
-            textLayoutsConfigured = true;
+            final int newImageSize = ((availableWidth + getPaddingLeft() + getPaddingRight()) / 3);
+            this.image = Bitmap.createScaledBitmap(image, newImageSize, newImageSize, false);
+
+            configured = true;
         }
     }
 }

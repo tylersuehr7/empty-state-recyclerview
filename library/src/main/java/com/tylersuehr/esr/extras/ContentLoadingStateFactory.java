@@ -1,4 +1,4 @@
-package com.tylersuehr.emptystaterecycler.extras;
+package com.tylersuehr.esr.extras;
 import android.content.Context;
 
 /**
