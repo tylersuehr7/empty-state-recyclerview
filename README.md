@@ -74,3 +74,22 @@ This interface is used to provide an observer for callback events regarding chan
 
 (2) `StateDisplay`
 This interface is used by `EmptyStateRecyclerView` to draw content to the screen for a state.
+
+## Making Custom State Displays
+Writing custom state displays are simple and easy!
+
+`EmptyStateRecyclerView` has an associated internal interface called, `StateDisplay`, that it uses to draw states to the screen. Create a specialization of `StateDisplay` and implement its `onDrawState(EmptyStateRecyclerView, Canvas)` method; where you can use any kind of drawing logic on the Android `Canvas` API.
+
+There is a base semi-concrete `StateDisplay` implementation in the repository that you can use if you want called, `AbstractStateDisplay`. This just stores padding that can be used while drawing in any subclasses of it.
+
+Here is a simple example:
+```java
+public class ExampleStateDisplay extends AbstractStateDisplay {
+        // ...any properties needed to perform drawing logic
+        
+        @Override
+        public void onDrawState(EmptyStateRecyclerView rv, Canvas canvas) {
+                // ... any cool drawing logic on the Canvas
+        }
+}
+```
