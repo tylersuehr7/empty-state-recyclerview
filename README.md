@@ -28,7 +28,7 @@ allprojects {
 In your app level build.gradle:
 ```java
 dependencies {
-    compile 'com.github.tylersuehr7:empty-state-recyclerview:1.0.3'
+    compile 'com.github.tylersuehr7:empty-state-recyclerview:1.0.4'
 }  
 ```
 
