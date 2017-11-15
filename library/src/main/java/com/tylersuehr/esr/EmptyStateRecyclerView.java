@@ -28,7 +28,7 @@ public class EmptyStateRecyclerView extends RecyclerView {
     public static final byte STATE_OK       = 3;
 
     /* Stores the state the recycler is in */
-    private byte state = STATE_EMPTY;
+    private byte state = STATE_OK;
 
     /* Stores all the available states that can be displayed */
     @NonNull
