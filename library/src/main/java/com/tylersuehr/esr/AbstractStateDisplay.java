@@ -3,13 +3,13 @@ package com.tylersuehr.esr;
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * This implementation of {@link EmptyStateRecyclerView.StateDisplay} will be the
+ * This implementation of {@link StateRecyclerView.StateDisplay} will be the
  * subclass of all state displays in this package.
  *
  * @author Tyler Suehr
  * @version 1.0
  */
-public abstract class AbstractStateDisplay implements EmptyStateRecyclerView.StateDisplay {
+public abstract class AbstractStateDisplay implements StateRecyclerView.StateDisplay {
     /* Stores padding dimensions (left, top, right, bottom) */
     private final int[] padding = { 0, 0, 0, 0 };
 

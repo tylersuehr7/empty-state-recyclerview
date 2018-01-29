@@ -20,7 +20,7 @@ import android.util.SparseArray;
  * @author Tyler Suehr
  * @version 1.0
  */
-public class EmptyStateRecyclerView extends RecyclerView {
+public class StateRecyclerView extends RecyclerView {
     /* Constants representing all the available possible states */
     public static final byte STATE_LOADING  = 0;
     public static final byte STATE_EMPTY    = 1;
@@ -38,15 +38,15 @@ public class EmptyStateRecyclerView extends RecyclerView {
     private OnStateChangedListener onStateChangedListener;
 
 
-    public EmptyStateRecyclerView(Context context) {
+    public StateRecyclerView(Context context) {
         this(context, null);
     }
 
-    public EmptyStateRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public StateRecyclerView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public EmptyStateRecyclerView(Context c, @Nullable AttributeSet attrs, int defStyle) {
+    public StateRecyclerView(Context c, @Nullable AttributeSet attrs, int defStyle) {
         super(c, attrs, defStyle);
 
         // Setup default states
@@ -192,7 +192,7 @@ public class EmptyStateRecyclerView extends RecyclerView {
      * Defines methods for our states that will be drawn.
      */
     public interface StateDisplay {
-        void onDrawState(EmptyStateRecyclerView rv, Canvas canvas);
+        void onDrawState(StateRecyclerView rv, Canvas canvas);
     }
 
     /**
