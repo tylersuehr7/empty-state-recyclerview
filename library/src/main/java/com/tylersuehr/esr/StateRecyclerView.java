@@ -39,7 +39,7 @@ public class StateRecyclerView extends RecyclerView {
     private SparseArray<State> stateDisplays = new SparseArray<>();
 
     /* Stores observer for changes to our state value */
-    private OnStateChangedListener onStateChangedListener;
+    private OnStateChangeListener onStateChangedListener;
 
 
     public StateRecyclerView(Context context) {
@@ -184,11 +184,11 @@ public class StateRecyclerView extends RecyclerView {
         return (state == STATE_OK);
     }
 
-    public void setOnStateChangedListener(OnStateChangedListener listener) {
+    public void setOnStateChangedListener(OnStateChangeListener listener) {
         this.onStateChangedListener = listener;
     }
 
-    public OnStateChangedListener getOnStateChangedListener() {
+    public OnStateChangeListener getOnStateChangedListener() {
         return onStateChangedListener;
     }
 
@@ -202,7 +202,7 @@ public class StateRecyclerView extends RecyclerView {
     /**
      * Callbacks for state changes.
      */
-    public interface OnStateChangedListener {
+    public interface OnStateChangeListener {
         void onStateChanged(byte state);
     }
 }
