@@ -3,7 +3,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.tylersuehr.esr.ContentItemLoadingStateFactory;
-import com.tylersuehr.esr.StateRecyclerView;
+import com.tylersuehr.esr.EmptyStateRecyclerView;
 import com.tylersuehr.esr.TextStateDisplay;
 
 /**
@@ -18,25 +18,25 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StateRecyclerView rv = (StateRecyclerView)findViewById(R.id.recycler);
+        EmptyStateRecyclerView rv = (EmptyStateRecyclerView)findViewById(R.id.recycler);
         // setup any states here...
 
-        rv.setStateDisplay(StateRecyclerView.STATE_LOADING,
+        rv.setStateDisplay(EmptyStateRecyclerView.STATE_LOADING,
                 ContentItemLoadingStateFactory.newListLoadingState(this));
-        rv.setStateDisplay(StateRecyclerView.STATE_EMPTY,
+        rv.setStateDisplay(EmptyStateRecyclerView.STATE_EMPTY,
                 new TextStateDisplay(this, "No content yet", "Please join or create some content."));
-        rv.setStateDisplay(StateRecyclerView.STATE_ERROR,
+        rv.setStateDisplay(EmptyStateRecyclerView.STATE_ERROR,
                 new TextStateDisplay(this, "SORRY...!", "Something went wrong :("));
 
         pretendRunLongTask(rv);
     }
 
-    private void pretendRunLongTask(final StateRecyclerView rv) {
-        rv.invokeState(StateRecyclerView.STATE_LOADING);
+    private void pretendRunLongTask(final EmptyStateRecyclerView rv) {
+        rv.invokeState(EmptyStateRecyclerView.STATE_LOADING);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                rv.invokeState(StateRecyclerView.STATE_ERROR);
+                rv.invokeState(EmptyStateRecyclerView.STATE_ERROR);
             }
         }, 5000);
     }

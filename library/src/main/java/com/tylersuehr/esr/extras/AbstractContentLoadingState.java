@@ -7,12 +7,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
-import com.tylersuehr.esr.StateRecyclerView;
+import com.tylersuehr.esr.EmptyStateRecyclerView;
 
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * Semi-concrete implementation of {@link StateRecyclerView.StateDisplay} that
+ * Semi-concrete implementation of {@link EmptyStateRecyclerView.StateDisplay} that
  * provides an API to create 'content' loading state displays.
  *
  * A 'content' loading state display is a display that shows mockup-like shapes that
@@ -24,7 +24,7 @@ import com.tylersuehr.esr.StateRecyclerView;
  * @author Tyler Suehr
  * @version 1.0
  */
-public abstract class AbstractContentLoadingState implements StateRecyclerView.StateDisplay {
+public abstract class AbstractContentLoadingState implements EmptyStateRecyclerView.StateDisplay {
     private static final int DEFAULT_ANIM_DURATION = 900;
 
     /* Properties for content loading drawing */
@@ -39,7 +39,7 @@ public abstract class AbstractContentLoadingState implements StateRecyclerView.S
     }
 
     @Override
-    public final void onDrawState(final StateRecyclerView rv, Canvas canvas) {
+    public final void onDrawState(final EmptyStateRecyclerView rv, Canvas canvas) {
         final int width = rv.getMeasuredWidth();
         final int height = rv.getMeasuredHeight();
 

@@ -14,7 +14,7 @@ import android.view.Gravity;
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * This implementation of {@link StateRecyclerView.StateDisplay} allows you to display
+ * This implementation of {@link EmptyStateRecyclerView.StateDisplay} allows you to display
  * an image and manipulate it.
  *
  * With this you can do the following:
@@ -49,7 +49,7 @@ public class ImageStateDisplay extends AbstractStateDisplay {
 
 
     @Override
-    public void onDrawState(StateRecyclerView rv, Canvas canvas) {
+    public void onDrawState(EmptyStateRecyclerView rv, Canvas canvas) {
         final int width = rv.getMeasuredWidth();
         final int height = rv.getMeasuredHeight();
         configureImage(width, height);

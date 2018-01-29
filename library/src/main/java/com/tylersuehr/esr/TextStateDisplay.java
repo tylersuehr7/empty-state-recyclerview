@@ -84,7 +84,7 @@ public class TextStateDisplay extends AbstractStateDisplay {
     }
 
     @Override
-    public void onDrawState(StateRecyclerView rv, Canvas canvas) {
+    public void onDrawState(EmptyStateRecyclerView rv, Canvas canvas) {
         final int width = rv.getMeasuredWidth();
         final int height = rv.getMeasuredHeight();
         configureTextLayouts(width);

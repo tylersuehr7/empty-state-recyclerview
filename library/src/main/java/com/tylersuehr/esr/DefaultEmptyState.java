@@ -11,17 +11,17 @@ import android.util.DisplayMetrics;
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * This implementation of {@link StateRecyclerView.StateDisplay} will simply draw
+ * This implementation of {@link EmptyStateRecyclerView.StateDisplay} will simply draw
  * two texts in the center of the screen:
  * (1) title - larger text size, and
  * (2) subtitle - smaller text size.
  *
- * This is the default empty state used by {@link StateRecyclerView}.
+ * This is the default empty state used by {@link EmptyStateRecyclerView}.
  *
  * @author Tyler Suehr
  * @version 1.0
  */
-public class DefaultEmptyState implements StateRecyclerView.StateDisplay {
+public class DefaultEmptyState implements EmptyStateRecyclerView.StateDisplay {
     /* Immutable paint objects to draw the text */
     private final TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private final TextPaint subtitlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
@@ -53,7 +53,7 @@ public class DefaultEmptyState implements StateRecyclerView.StateDisplay {
     }
 
     @Override
-    public void onDrawState(StateRecyclerView rv, Canvas canvas) {
+    public void onDrawState(EmptyStateRecyclerView rv, Canvas canvas) {
         final int width = rv.getMeasuredWidth();
         final int height = rv.getMeasuredHeight();
 
