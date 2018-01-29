@@ -66,7 +66,7 @@ public abstract class ContentItemLoadingStateFactory {
 
 
     /**
-     * Semi-concrete implementation of {@link StateRecyclerView.StateDisplay} that
+     * Semi-concrete implementation of {@link StateRecyclerView.State} that
      * provides an API to create 'content item' loading state displays.
      *
      * A content item loading state display is a display that shows mockup-like shapes
@@ -78,7 +78,7 @@ public abstract class ContentItemLoadingStateFactory {
      * This is available to be subclassed by any other classes outside of this parent class,
      * but is also the subclass for all other internal classes.
      */
-    public static abstract class AbstractContentItemLoadingState implements StateRecyclerView.StateDisplay {
+    public static abstract class AbstractContentItemLoadingState implements StateRecyclerView.State {
         private static final int DEFAULT_ANIM_DURATION = 900;
 
         /* Properties for content loading drawing */

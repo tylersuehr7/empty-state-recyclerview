@@ -14,7 +14,7 @@ import android.view.Gravity;
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * This implementation of {@link StateRecyclerView.StateDisplay} allows you to display
+ * This implementation of {@link StateRecyclerView.State} allows you to display
  * an image and manipulate it.
  *
  * With this you can do the following:

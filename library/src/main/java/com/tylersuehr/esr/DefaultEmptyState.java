@@ -11,7 +11,7 @@ import android.util.DisplayMetrics;
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * This implementation of {@link StateRecyclerView.StateDisplay} will simply draw
+ * This implementation of {@link StateRecyclerView.State} will simply draw
  * two texts in the center of the screen:
  * (1) title - larger text size, and
  * (2) subtitle - smaller text size.
@@ -21,7 +21,7 @@ import android.util.DisplayMetrics;
  * @author Tyler Suehr
  * @version 1.0
  */
-public class DefaultEmptyState implements StateRecyclerView.StateDisplay {
+public class DefaultEmptyState implements StateRecyclerView.State {
     /* Immutable paint objects to draw the text */
     private final TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private final TextPaint subtitlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);

@@ -11,7 +11,7 @@ import android.support.annotation.NonNull;
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * This implementation of {@link StateRecyclerView.StateDisplay} will simply draw
+ * This implementation of {@link StateRecyclerView.State} will simply draw
  * one text in the center of the screen and animate it.
  *
  * This is the default loading state used by {@link StateRecyclerView}.
@@ -19,7 +19,7 @@ import android.support.annotation.NonNull;
  * @author Tyler Suehr
  * @version 1.0
  */
-public class DefaultLoadingState implements StateRecyclerView.StateDisplay {
+public class DefaultLoadingState implements StateRecyclerView.State {
     /* Used to paint the title text */
     private final Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     /* Stores the title text for the loading state */

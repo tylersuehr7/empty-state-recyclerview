@@ -36,7 +36,7 @@ public class StateRecyclerView extends RecyclerView {
 
     /* Stores all the available states that can be displayed */
     @NonNull
-    private SparseArray<StateDisplay> stateDisplays = new SparseArray<>();
+    private SparseArray<State> stateDisplays = new SparseArray<>();
 
     /* Stores observer for changes to our state value */
     private OnStateChangedListener onStateChangedListener;
@@ -63,7 +63,7 @@ public class StateRecyclerView extends RecyclerView {
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
 
-        final StateDisplay display;
+        final State display;
         synchronized (this) {
             display = stateDisplays.get(state);
         }
@@ -78,9 +78,9 @@ public class StateRecyclerView extends RecyclerView {
      *
      * @param state {@link #STATE_LOADING}, {@link #STATE_EMPTY},
      * {@link #STATE_ERROR}, or {@link #STATE_OK}
-     * @param display {@link StateDisplay}
+     * @param display {@link State}
      */
-    public void setStateDisplay(byte state, StateDisplay display) {
+    public void setStateDisplay(byte state, State display) {
         if (display == null) {
             throw new NullPointerException("State display cannot be null!");
         }
@@ -94,9 +94,9 @@ public class StateRecyclerView extends RecyclerView {
      *
      * @param states Array of {@link #STATE_LOADING}, {@link #STATE_EMPTY},
      * {@link #STATE_ERROR}, or {@link #STATE_OK}
-     * @param displays Array of {@link StateDisplay}
+     * @param displays Array of {@link State}
      */
-    public void setStateDisplays(byte[] states, StateDisplay[] displays) {
+    public void setStateDisplays(byte[] states, State[] displays) {
         if (states == null || displays == null) {
             throw new NullPointerException("States or displays cannot be null!");
         }
@@ -195,7 +195,7 @@ public class StateRecyclerView extends RecyclerView {
     /**
      * Defines methods for our states that will be drawn.
      */
-    public interface StateDisplay {
+    public interface State {
         void onDrawState(StateRecyclerView rv, Canvas canvas);
     }
 
