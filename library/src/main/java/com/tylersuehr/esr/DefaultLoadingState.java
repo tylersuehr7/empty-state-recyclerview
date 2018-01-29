@@ -11,15 +11,15 @@ import android.support.annotation.NonNull;
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * This implementation of {@link EmptyStateRecyclerView.StateDisplay} will simply draw
+ * This implementation of {@link StateRecyclerView.StateDisplay} will simply draw
  * one text in the center of the screen and animate it.
  *
- * This is the default loading state used by {@link EmptyStateRecyclerView}.
+ * This is the default loading state used by {@link StateRecyclerView}.
  *
  * @author Tyler Suehr
  * @version 1.0
  */
-public class DefaultLoadingState implements EmptyStateRecyclerView.StateDisplay {
+public class DefaultLoadingState implements StateRecyclerView.StateDisplay {
     /* Used to paint the title text */
     private final Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     /* Stores the title text for the loading state */
@@ -38,7 +38,7 @@ public class DefaultLoadingState implements EmptyStateRecyclerView.StateDisplay 
     }
 
     @Override
-    public void onDrawState(final EmptyStateRecyclerView rv, Canvas canvas) {
+    public void onDrawState(final StateRecyclerView rv, Canvas canvas) {
         canvas.drawText(title,
                 (rv.getMeasuredWidth() >> 1),
                 (rv.getMeasuredHeight() >> 1),

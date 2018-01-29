@@ -93,7 +93,7 @@ public class ImageTextStateDisplay extends AbstractStateDisplay {
     }
 
     @Override
-    public void onDrawState(EmptyStateRecyclerView rv, Canvas canvas) {
+    public void onDrawState(StateRecyclerView rv, Canvas canvas) {
         if (drawTextFirst) {
             drawTextFirst(rv, canvas);
         } else {
@@ -217,7 +217,7 @@ public class ImageTextStateDisplay extends AbstractStateDisplay {
         this.drawTextFirst = value;
     }
 
-    private void drawImageFirst(EmptyStateRecyclerView rv, Canvas canvas) {
+    private void drawImageFirst(StateRecyclerView rv, Canvas canvas) {
         final int width = rv.getMeasuredWidth();
         final int height = rv.getMeasuredHeight();
         configure(width);
@@ -250,7 +250,7 @@ public class ImageTextStateDisplay extends AbstractStateDisplay {
         canvas.restore();
     }
 
-    private void drawTextFirst(EmptyStateRecyclerView rv, Canvas canvas) {
+    private void drawTextFirst(StateRecyclerView rv, Canvas canvas) {
         final int width = rv.getMeasuredWidth();
         final int height = rv.getMeasuredHeight();
         configure(width);

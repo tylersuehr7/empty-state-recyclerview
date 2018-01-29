@@ -10,17 +10,21 @@ import android.util.SparseArray;
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * This subclass of {@link RecyclerView} will manage a state, and then visual represent
- * that state to the user, if specified, using the Android Canvas APIs.
+ * Subclass of {@link RecyclerView} that manages a state and visually
+ * represents that state to the user using the Android Canvas APIs.
  *
- * A state, conceptually, represents the context of which the data being shown is
- * in... it can be in a loading state, it can be in an empty state, it can be in a
- * finished state... etc.
+ * Conceptually, a state represents the context of which the data being
+ * shown is in. It can be in a loading state, an empty state, a finished
+ * state,... etc.
+ *
+ * This contains predefined states, but you can also use any integer value
+ * to represent any custom state(s) you wish; obviously you cannot use any
+ * of the predefined states' values though.
  *
  * @author Tyler Suehr
  * @version 1.0
  */
-public class EmptyStateRecyclerView extends RecyclerView {
+public class StateRecyclerView extends RecyclerView {
     /* Constants representing all the available possible states */
     public static final byte STATE_LOADING  = 0;
     public static final byte STATE_EMPTY    = 1;
@@ -38,15 +42,15 @@ public class EmptyStateRecyclerView extends RecyclerView {
     private OnStateChangedListener onStateChangedListener;
 
 
-    public EmptyStateRecyclerView(Context context) {
+    public StateRecyclerView(Context context) {
         this(context, null);
     }
 
-    public EmptyStateRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public StateRecyclerView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public EmptyStateRecyclerView(Context c, @Nullable AttributeSet attrs, int defStyle) {
+    public StateRecyclerView(Context c, @Nullable AttributeSet attrs, int defStyle) {
         super(c, attrs, defStyle);
 
         // Setup default states
@@ -192,7 +196,7 @@ public class EmptyStateRecyclerView extends RecyclerView {
      * Defines methods for our states that will be drawn.
      */
     public interface StateDisplay {
-        void onDrawState(EmptyStateRecyclerView rv, Canvas canvas);
+        void onDrawState(StateRecyclerView rv, Canvas canvas);
     }
 
     /**
