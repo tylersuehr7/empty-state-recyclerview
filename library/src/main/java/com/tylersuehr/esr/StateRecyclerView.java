@@ -26,20 +26,19 @@ import android.util.SparseArray;
  */
 public class StateRecyclerView extends RecyclerView {
     /* Constants representing all the available possible states */
+    public static final byte STATE_NONE    = -1;
     public static final byte STATE_LOADING  = 0;
     public static final byte STATE_EMPTY    = 1;
     public static final byte STATE_ERROR    = 2;
     public static final byte STATE_OK       = 3;
 
     /* Stores the state the recycler is in */
-    private byte state = STATE_OK;
-
+    private int mCurrentSelection = STATE_NONE;
+    private State mCurrentState;
     /* Stores all the available states that can be displayed */
-    @NonNull
-    private SparseArray<State> stateDisplays = new SparseArray<>();
-
+    private final SparseArray<State> mStates = new SparseArray<>();
     /* Stores observer for changes to our state value */
-    private OnStateChangeListener onStateChangedListener;
+    private OnStateChangeListener mChangeListener;
 
 
     public StateRecyclerView(Context context) {
@@ -54,155 +53,141 @@ public class StateRecyclerView extends RecyclerView {
         super(c, attrs, defStyle);
 
         // Setup default states
-        this.stateDisplays.put(STATE_LOADING, new DefaultLoadingState(c, "Loading..."));
-        this.stateDisplays.put(STATE_EMPTY, new DefaultEmptyState(c, "No Content", "AWWW...!"));
-        this.stateDisplays.put(STATE_ERROR, new DefaultEmptyState(c, "Something Went Wrong", "SORRY...!"));
+        mStates.put(STATE_LOADING, new DefaultLoadingState(c, "Loading..."));
+        mStates.put(STATE_EMPTY, new DefaultEmptyState(c, "No Content", "AWWW...!"));
+        mStates.put(STATE_ERROR, new DefaultEmptyState(c, "Something Went Wrong", "SORRY...!"));
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
-
-        final State display;
-        synchronized (this) {
-            display = stateDisplays.get(state);
-        }
-
-        if (display != null) {
-            display.onDrawState(this, canvas);
+        if (mCurrentSelection != STATE_NONE) {
+            final State state = mCurrentState;
+            state.onDrawState(this, canvas);
         }
     }
 
     /**
-     * Sets the state display for the given state.
+     * Adds a state for the given state key.
      *
-     * @param state {@link #STATE_LOADING}, {@link #STATE_EMPTY},
-     * {@link #STATE_ERROR}, or {@link #STATE_OK}
-     * @param display {@link State}
+     * Note: if a state already exists for the given state key,
+     * it will be overwritten.
+     *
+     * @param stateKey Valid state key
+     * @param state {@link State}
      */
-    public void setStateDisplay(byte state, State display) {
-        if (display == null) {
-            throw new NullPointerException("State display cannot be null!");
-        }
-        this.stateDisplays.put(state, display);
-        requestLayout();
-        invalidate();
+    public void addState(int stateKey, @NonNull State state) {
+        mStates.put(stateKey, state);
     }
 
     /**
-     * Sets multiple state displays for the given states.
+     * Adds all states for all the given state keys.
      *
-     * @param states Array of {@link #STATE_LOADING}, {@link #STATE_EMPTY},
-     * {@link #STATE_ERROR}, or {@link #STATE_OK}
-     * @param displays Array of {@link State}
+     * Note: if a state already exists for the given state key,
+     * it will be overwritten.
+     *
+     * @param stateKeys Array of valid state keys
+     * @param states Array of {@link State}
      */
-    public void setStateDisplays(byte[] states, State[] displays) {
-        if (states == null || displays == null) {
-            throw new NullPointerException("States or displays cannot be null!");
-        }
-        if (states.length != displays.length) {
-            throw new IllegalArgumentException("The amount of given states do " +
-                    "not correspond to the amount of given displays!");
+    public void addStates(@NonNull int[] stateKeys, @NonNull State[] states) {
+        if (stateKeys.length != states.length) {
+            throw new IllegalArgumentException("There must be a state " +
+                    "for every given state key!");
         }
         for (int i = 0; i < states.length; i++) {
-            this.stateDisplays.put(states[i], displays[i]);
+            mStates.put(stateKeys[i], states[i]);
         }
-        requestLayout();
-        invalidate();
     }
 
     /**
-     * Removes the state display for a given state.
+     * Removes the state for a given state key.
      *
-     * @param state {@link #STATE_LOADING}, {@link #STATE_EMPTY},
-     * {@link #STATE_ERROR}, or {@link #STATE_OK}
+     * @param stateKey Valid state key
      */
-    public void removeStateDisplay(byte state) {
-        final int index = stateDisplays.indexOfKey(state);
+    public void removeState(int stateKey) {
+        final int index = mStates.indexOfKey(stateKey);
         if (index > -1) {
-            this.stateDisplays.removeAt(index);
-            requestLayout();
-            invalidate();
+            mStates.removeAt(index);
+            if (stateKey == mCurrentSelection) {
+                clearCurrentState();
+            }
         }
     }
 
     /**
-     * Removes all state displays for all states.
+     * Removes all states.
      */
-    public void clearStateDisplays() {
-        if (stateDisplays.size() > 0) {
-            this.stateDisplays.clear();
-            requestLayout();
-            invalidate();
+    public void clearStates() {
+        if (mStates.size() > 0) {
+            mStates.clear();
+            clearCurrentState();
         }
     }
 
     /**
-     * Invokes the given state.
-     *
-     * @param state {@link #STATE_LOADING}, {@link #STATE_EMPTY},
-     * {@link #STATE_ERROR}, or {@link #STATE_OK}
+     * Invokes the given state by its state key.
+     * @param stateKey Valid state key
      */
-    public void invokeState(byte state) {
-        if (this.state == state) { return; }
-        this.state = state;
+    public void invokeState(int stateKey) {
+        if (mCurrentSelection == stateKey) { return; }
+
+        // Try to find a valid state in the sparse array
+        final State foundState = mStates.get(stateKey);
+        if (stateKey != STATE_NONE && foundState == null) {
+            throw new NullPointerException("No state exists for " + stateKey);
+        }
+
+        // Update the current selection and state (thread-safe)
+        synchronized (this) {
+            mCurrentSelection = stateKey;
+            mCurrentState = foundState;
+        }
+
+        // Invoke a UI update
         invalidate();
-        if (onStateChangedListener != null) {
-            this.onStateChangedListener.onStateChanged(state);
+
+        // Trigger any available listener
+        if (mChangeListener != null) {
+            mChangeListener.onStateChanged(mCurrentSelection);
         }
     }
 
-    /**
-     * Checks if the current state is the empty state.
-     * @return True if empty state
-     */
-    public boolean isEmptyState() {
-        return (state == STATE_EMPTY);
+    public void clearCurrentState() {
+        synchronized (this) {
+            mCurrentSelection = STATE_NONE;
+            mCurrentState = null;
+        }
+        invalidate();
     }
 
-    /**
-     * Checks if the current state is the error state.
-     * @return True if empty state
-     */
-    public boolean isErrorState() {
-        return (state == STATE_ERROR);
+    public State getCurrentState() {
+        return mCurrentState;
     }
 
-    /**
-     * Checks if the current state is the loading state.
-     * @return True if empty state
-     */
-    public boolean isLoadingState() {
-        return (state == STATE_LOADING);
-    }
-
-    /**
-     * Checks if the current state is the ok state.
-     * @return True if empty state
-     */
-    public boolean isOkState() {
-        return (state == STATE_OK);
+    public int getCurrentSelection() {
+        return mCurrentSelection;
     }
 
     public void setOnStateChangedListener(OnStateChangeListener listener) {
-        this.onStateChangedListener = listener;
+        mChangeListener = listener;
     }
 
     public OnStateChangeListener getOnStateChangedListener() {
-        return onStateChangedListener;
+        return mChangeListener;
     }
 
+
     /**
-     * Defines methods for our states that will be drawn.
+     * Defines a drawable state to manipulate Canvas APIs.
      */
     public interface State {
         void onDrawState(StateRecyclerView rv, Canvas canvas);
     }
 
     /**
-     * Callbacks for state changes.
+     * Defines callbacks for state change events.
      */
     public interface OnStateChangeListener {
-        void onStateChanged(byte state);
+        void onStateChanged(int state);
     }
 }
