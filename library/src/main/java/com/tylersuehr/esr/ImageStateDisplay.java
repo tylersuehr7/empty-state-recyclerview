@@ -49,7 +49,14 @@ public class ImageStateDisplay extends AbstractState {
 
 
     @Override
+    protected void onConfigure(int availableWidth, int availableHeight) {
+
+    }
+
+    @Override
     public void onDrawState(StateRecyclerView rv, Canvas canvas) {
+        super.onDrawState(rv, canvas);
+
         final int width = rv.getMeasuredWidth();
         final int height = rv.getMeasuredHeight();
         configureImage(width, height);

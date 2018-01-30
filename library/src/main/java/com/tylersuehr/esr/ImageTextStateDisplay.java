@@ -93,7 +93,13 @@ public class ImageTextStateDisplay extends AbstractState {
     }
 
     @Override
+    protected void onConfigure(int availableWidth, int availableHeight) {
+
+    }
+
+    @Override
     public void onDrawState(StateRecyclerView rv, Canvas canvas) {
+        super.onDrawState(rv, canvas);
         if (drawTextFirst) {
             drawTextFirst(rv, canvas);
         } else {

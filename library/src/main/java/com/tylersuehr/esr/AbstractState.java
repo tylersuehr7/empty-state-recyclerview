@@ -1,5 +1,8 @@
 package com.tylersuehr.esr;
 
+import android.graphics.Canvas;
+import android.support.annotation.CallSuper;
+
 /**
  * Copyright © 2017 Tyler Suehr
  *
@@ -11,29 +14,45 @@ package com.tylersuehr.esr;
  */
 public abstract class AbstractState implements StateRecyclerView.State {
     /* Stores padding dimensions (left, top, right, bottom) */
-    private final int[] padding = { 0, 0, 0, 0 };
+    private final int[] mPadding = { 0, 0, 0, 0 };
+    private boolean mConfigured = false;
 
+
+    @CallSuper
+    @Override
+    public void onDrawState(StateRecyclerView rv, Canvas canvas) {
+        if (!mConfigured) {
+            onConfigure(rv.getMeasuredWidth(), rv.getMeasuredHeight());
+            mConfigured = true;
+        }
+    }
+
+    protected abstract void onConfigure(int availableWidth, int availableHeight);
 
     public void setPadding(int left, int top, int right, int bottom) {
-        this.padding[0] = left;
-        this.padding[1] = top;
-        this.padding[2] = right;
-        this.padding[3] = bottom;
+        this.mPadding[0] = left;
+        this.mPadding[1] = top;
+        this.mPadding[2] = right;
+        this.mPadding[3] = bottom;
     }
 
     public final int getPaddingLeft() {
-        return padding[0];
+        return mPadding[0];
     }
 
     public final int getPaddingRight() {
-        return padding[2];
+        return mPadding[2];
     }
 
     public final int getPaddingTop() {
-        return padding[1];
+        return mPadding[1];
     }
 
     public final int getPaddingBottom() {
-        return padding[3];
+        return mPadding[3];
+    }
+
+    protected final void invalidate() {
+        mConfigured = false;
     }
 }

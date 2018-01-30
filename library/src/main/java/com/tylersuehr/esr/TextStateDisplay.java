@@ -26,8 +26,6 @@ import android.view.Gravity;
  * @version 1.0
  */
 public class TextStateDisplay extends AbstractState {
-    private boolean textLayoutsConfigured = false;
-
     /* Properties for the title text */
     private final TextPaint titlePaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
     private StaticLayout titleLayout;
@@ -85,9 +83,10 @@ public class TextStateDisplay extends AbstractState {
 
     @Override
     public void onDrawState(StateRecyclerView rv, Canvas canvas) {
+        super.onDrawState(rv, canvas);
+
         final int width = rv.getMeasuredWidth();
         final int height = rv.getMeasuredHeight();
-        configureTextLayouts(width);
 
         // Account for vertical text gravity
         final int verticalGravity = textGravity&Gravity.VERTICAL_GRAVITY_MASK;
@@ -130,9 +129,26 @@ public class TextStateDisplay extends AbstractState {
     }
 
     @Override
-    public void setPadding(int left, int top, int right, int bottom) {
-        super.setPadding(left, top, right, bottom);
-        invalidateText();
+    protected void onConfigure(int availableWidth, int availableHeight) {
+        final int totalNeededPadding = getPaddingLeft() + getPaddingRight();
+
+        // Create new static layout only if needed!
+        if ((titleLayout.getWidth() + totalNeededPadding) > availableWidth) {
+            this.titleLayout = new StaticLayout(title,
+                    titlePaint,
+                    availableWidth,
+                    Layout.Alignment.ALIGN_NORMAL,
+                    1.15f, 0, false);
+        }
+
+        // Create new static layout only if needed!
+        if ((subtitleLayout.getWidth() + totalNeededPadding) > availableWidth) {
+            this.subtitleLayout = new StaticLayout(subtitle,
+                    subtitlePaint,
+                    availableWidth,
+                    Layout.Alignment.ALIGN_NORMAL,
+                    1.15f, 0, false);
+        }
     }
 
     /**
@@ -155,7 +171,6 @@ public class TextStateDisplay extends AbstractState {
                 break;
         }
         this.textGravity = gravity;
-        // No invalidation needed
     }
 
     /**
@@ -164,7 +179,6 @@ public class TextStateDisplay extends AbstractState {
      */
     public void setTitleSpacing(int spacing) {
         this.titleSpacing = spacing;
-        // No invalidation needed
     }
 
     /**
@@ -173,7 +187,7 @@ public class TextStateDisplay extends AbstractState {
      */
     public void setTitleTextColor(@ColorInt int color) {
         this.titlePaint.setColor(color);
-        invalidateText();
+        invalidate();
     }
 
     /**
@@ -182,7 +196,7 @@ public class TextStateDisplay extends AbstractState {
      */
     public void setTitleTextSize(float textSize) {
         this.titlePaint.setTextSize(textSize);
-        invalidateText();
+        invalidate();
     }
 
     /**
@@ -191,7 +205,7 @@ public class TextStateDisplay extends AbstractState {
      */
     public void setTitleTextAlign(Paint.Align align) {
         this.titlePaint.setTextAlign(align);
-        invalidateText();
+        invalidate();
     }
 
     /**
@@ -200,7 +214,7 @@ public class TextStateDisplay extends AbstractState {
      */
     public void setTitle(String title) {
         this.title = title;
-        invalidateText();
+        invalidate();
     }
 
     /**
@@ -209,7 +223,7 @@ public class TextStateDisplay extends AbstractState {
      */
     public void setSubtitleTextColor(@ColorInt int color) {
         this.subtitlePaint.setColor(color);
-        invalidateText();
+        invalidate();
     }
 
     /**
@@ -218,7 +232,7 @@ public class TextStateDisplay extends AbstractState {
      */
     public void setSubtitleTextSize(float textSize) {
         this.subtitlePaint.setTextSize(textSize);
-        invalidateText();
+        invalidate();
     }
 
     /**
@@ -227,7 +241,7 @@ public class TextStateDisplay extends AbstractState {
      */
     public void setSubtitleTextAlign(Paint.Align align) {
         this.subtitlePaint.setTextAlign(align);
-        invalidateText();
+        invalidate();
     }
 
     /**
@@ -236,7 +250,7 @@ public class TextStateDisplay extends AbstractState {
      */
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
-        invalidateText();
+        invalidate();
     }
 
     /**
@@ -246,11 +260,7 @@ public class TextStateDisplay extends AbstractState {
     public void setTypeface(Typeface typeface) {
         this.titlePaint.setTypeface(typeface);
         this.subtitlePaint.setTypeface(typeface);
-        invalidateText();
-    }
-
-    private void invalidateText() {
-        this.textLayoutsConfigured = false;
+        invalidate();
     }
 
     private float getFullTextHeight() {
@@ -275,31 +285,5 @@ public class TextStateDisplay extends AbstractState {
                 break;
         }
         return dx;
-    }
-
-    private void configureTextLayouts(final int availableWidth) {
-        if (!textLayoutsConfigured) {
-            final int totalNeededPadding = getPaddingLeft() + getPaddingRight();
-
-            // Create new static layout only if needed!
-            if ((titleLayout.getWidth() + totalNeededPadding) > availableWidth) {
-                this.titleLayout = new StaticLayout(title,
-                        titlePaint,
-                        availableWidth,
-                        Layout.Alignment.ALIGN_NORMAL,
-                        1.15f, 0, false);
-            }
-
-            // Create new static layout only if needed!
-            if ((subtitleLayout.getWidth() + totalNeededPadding) > availableWidth) {
-                this.subtitleLayout = new StaticLayout(subtitle,
-                        subtitlePaint,
-                        availableWidth,
-                        Layout.Alignment.ALIGN_NORMAL,
-                        1.15f, 0, false);
-            }
-
-            textLayoutsConfigured = true;
-        }
     }
 }
