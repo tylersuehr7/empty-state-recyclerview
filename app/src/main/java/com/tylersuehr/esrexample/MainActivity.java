@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.tylersuehr.esr.ContentItemLoadingStateFactory;
 import com.tylersuehr.esr.StateRecyclerView;
-import com.tylersuehr.esr.TextStateDisplay;
+import com.tylersuehr.esr.TextualState;
 
 /**
  * Copyright © 2017 Tyler Suehr
@@ -24,9 +24,9 @@ public class MainActivity extends AppCompatActivity {
         rv.addState(StateRecyclerView.STATE_LOADING,
                 ContentItemLoadingStateFactory.newListLoadingState(this));
         rv.addState(StateRecyclerView.STATE_EMPTY,
-                new TextStateDisplay(this, "No content yet", "Please join or create some content."));
+                new TextualState(this, "No content yet", "Please join or create some content."));
         rv.addState(StateRecyclerView.STATE_ERROR,
-                new TextStateDisplay(this, "SORRY...!", "Something went wrong :("));
+                new TextualState(this, "SORRY...!", "Something went wrong :("));
 
         pretendRunLongTask(rv);
     }
