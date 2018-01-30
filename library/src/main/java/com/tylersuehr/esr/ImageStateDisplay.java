@@ -28,7 +28,7 @@ import android.view.Gravity;
  * @author Tyler Suehr
  * @version 1.0
  */
-public class ImageStateDisplay extends AbstractStateDisplay {
+public class ImageStateDisplay extends AbstractState {
     /* Constants for image scale type */
     public static final byte NONE           = 0; // No scaling will be applied
     public static final byte FIT_XY         = 1; // Stretch to fit screen dimensions

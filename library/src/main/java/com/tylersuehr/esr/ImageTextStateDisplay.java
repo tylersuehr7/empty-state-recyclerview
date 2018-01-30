@@ -21,7 +21,7 @@ import android.util.DisplayMetrics;
  * @author Tyler Suehr
  * @version 1.0
  */
-public class ImageTextStateDisplay extends AbstractStateDisplay {
+public class ImageTextStateDisplay extends AbstractState {
     private final int sixteenDp;
 
     private boolean configured = false;

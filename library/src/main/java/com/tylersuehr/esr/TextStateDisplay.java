@@ -18,14 +18,14 @@ import android.view.Gravity;
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * Subclass of {@link AbstractStateDisplay} that contains properties for two texts (one above
+ * Subclass of {@link AbstractState} that contains properties for two texts (one above
  * the other one), a title and a subtitle perhaps, and affords an API to draw and manipulate
  * them.
  *
  * @author Tyler Suehr
  * @version 1.0
  */
-public class TextStateDisplay extends AbstractStateDisplay {
+public class TextStateDisplay extends AbstractState {
     private boolean textLayoutsConfigured = false;
 
     /* Properties for the title text */

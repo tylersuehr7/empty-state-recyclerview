@@ -3,13 +3,13 @@ package com.tylersuehr.esr;
 /**
  * Copyright © 2017 Tyler Suehr
  *
- * This implementation of {@link StateRecyclerView.State} will be the
- * subclass of all state displays in this package.
+ * Implementation of {@link StateRecyclerView.State} will be the subclass of all
+ * state displays in this package.
  *
  * @author Tyler Suehr
  * @version 1.0
  */
-public abstract class AbstractStateDisplay implements StateRecyclerView.State {
+public abstract class AbstractState implements StateRecyclerView.State {
     /* Stores padding dimensions (left, top, right, bottom) */
     private final int[] padding = { 0, 0, 0, 0 };
 
@@ -21,19 +21,19 @@ public abstract class AbstractStateDisplay implements StateRecyclerView.State {
         this.padding[3] = bottom;
     }
 
-    protected final int getPaddingLeft() {
+    public final int getPaddingLeft() {
         return padding[0];
     }
 
-    protected final int getPaddingRight() {
+    public final int getPaddingRight() {
         return padding[2];
     }
 
-    protected final int getPaddingTop() {
+    public final int getPaddingTop() {
         return padding[1];
     }
 
-    protected final int getPaddingBottom() {
+    public final int getPaddingBottom() {
         return padding[3];
     }
 }
