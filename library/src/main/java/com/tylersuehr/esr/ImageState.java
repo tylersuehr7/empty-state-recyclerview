@@ -28,7 +28,7 @@ import android.view.Gravity;
  * @author Tyler Suehr
  * @version 1.0
  */
-public class ImageStateDisplay extends AbstractState {
+public class ImageState extends AbstractState {
     /* Constants for image scale type */
     public static final byte NONE           = 0; // No scaling will be applied
     public static final byte FIT_XY         = 1; // Stretch to fit screen dimensions
@@ -37,21 +37,14 @@ public class ImageStateDisplay extends AbstractState {
     public static final byte CROP_TO_WIDTH  = 4; // Cropped to fit screen width
     public static final byte CROP_TO_HEIGHT = 5; // Cropped to fit screen height
     public static final byte CROP_XY        = 6; // Cropped to fit larges screen dimension
-
-    private boolean imageConfigured = false;
-
+    
     /* Stores the scale type to apply to the image */
-    private byte scaleType = NONE;
+    private byte mScaleType = NONE;
     /* Stores the gravity for the image */
-    private int imageGravity;
+    private int mGravity;
     /* Stores a reference to the image */
-    private Bitmap image;
+    private Bitmap mImage;
 
-
-    @Override
-    protected void onConfigure(int availableWidth, int availableHeight) {
-
-    }
 
     @Override
     public void onDrawState(StateRecyclerView rv, Canvas canvas) {
@@ -59,20 +52,19 @@ public class ImageStateDisplay extends AbstractState {
 
         final int width = rv.getMeasuredWidth();
         final int height = rv.getMeasuredHeight();
-        configureImage(width, height);
 
-        final int horizontalGravity = Gravity.getAbsoluteGravity(imageGravity,
+        final int horizontalGravity = Gravity.getAbsoluteGravity(mGravity,
                 ViewCompat.getLayoutDirection(rv))&Gravity.HORIZONTAL_GRAVITY_MASK;
-        final int verticalGravity = imageGravity&Gravity.VERTICAL_GRAVITY_MASK;
+        final int verticalGravity = mGravity &Gravity.VERTICAL_GRAVITY_MASK;
 
         // Account for horizontal gravity
         float dx;
         switch (horizontalGravity) {
             case Gravity.CENTER_HORIZONTAL:
-                dx = (width >> 1) - (image.getWidth() >> 1);
+                dx = (width >> 1) - (mImage.getWidth() >> 1);
                 break;
             case GravityCompat.END:
-                dx = width - image.getWidth();
+                dx = width - mImage.getWidth();
                 break;
             default:
             case GravityCompat.START:
@@ -84,10 +76,10 @@ public class ImageStateDisplay extends AbstractState {
         float dy;
         switch (verticalGravity) {
             case Gravity.CENTER_VERTICAL:
-                dy = (height >> 1) - (image.getHeight() >> 1);
+                dy = (height >> 1) - (mImage.getHeight() >> 1);
                 break;
             case Gravity.BOTTOM:
-                dy = height - image.getHeight();
+                dy = height - mImage.getHeight();
                 break;
             default:
             case Gravity.TOP:
@@ -102,27 +94,42 @@ public class ImageStateDisplay extends AbstractState {
         dy -= getPaddingBottom(); // Bottom margin
 
         // Draw bitmap using locations based on gravity
-        canvas.drawBitmap(image, dx, dy, null);
+        canvas.drawBitmap(mImage, dx, dy, null);
+    }
+
+    @Override
+    protected void onConfigure(int availableWidth, int availableHeight) {
+        switch (mScaleType) {
+            case FIT_XY:
+            case FIT_WIDTH:
+            case FIT_HEIGHT:
+                stretchImage(availableWidth, availableHeight);
+                break;
+            case CROP_XY:
+            case CROP_TO_WIDTH:
+            case CROP_TO_HEIGHT:
+                cropImage(availableWidth, availableHeight);
+                break;
+        }
     }
 
     public void setScaleType(byte scaleType) {
-        this.scaleType = scaleType;
-        invalidateImage();
+        mScaleType = scaleType;
+        invalidate();
     }
 
     public void setImageGravity(int gravity) {
-        this.imageGravity = gravity;
-        // No need for invalidation
+        mGravity = gravity;
     }
 
     public void setImage(Bitmap bitmap) {
-        this.image = bitmap;
-        invalidateImage();
+        mImage = bitmap;
+        invalidate();
     }
 
     public void setImage(Drawable drawable) {
-        this.image = drawableToBitmap(drawable);
-        invalidateImage();
+        mImage = drawableToBitmap(drawable);
+        invalidate();
     }
 
     public void setImage(Context c, @DrawableRes int res) {
@@ -130,36 +137,36 @@ public class ImageStateDisplay extends AbstractState {
     }
 
     public void resizeImage(int width, int height) {
-        if (image == null) {
+        if (mImage == null) {
             throw new NullPointerException("Please set an image before calling resizeImage()!");
         }
-        this.image = Bitmap.createScaledBitmap(image, width, height, false);
-        invalidateImage();
+        mImage = Bitmap.createScaledBitmap(mImage, width, height, false);
+        invalidate();
     }
 
     protected void stretchImage(final int screenWidth, final int screenHeight) {
-        switch (scaleType) {
+        switch (mScaleType) {
             case FIT_XY:
-                this.image = Bitmap.createScaledBitmap(image, screenWidth, screenHeight, true);
+                mImage = Bitmap.createScaledBitmap(mImage, screenWidth, screenHeight, true);
                 break;
             case FIT_WIDTH:
-                this.image = Bitmap.createScaledBitmap(image, screenWidth, image.getHeight(), true);
+                mImage = Bitmap.createScaledBitmap(mImage, screenWidth, mImage.getHeight(), true);
                 break;
             case FIT_HEIGHT:
-                this.image = Bitmap.createScaledBitmap(image, image.getWidth(), screenHeight, true);
+                mImage = Bitmap.createScaledBitmap(mImage, mImage.getWidth(), screenHeight, true);
                 break;
         }
     }
 
     protected void cropImage(final int screenWidth, final int screenHeight) {
-        final int sourceWidth = image.getWidth();
-        final int sourceHeight = image.getHeight();
+        final int sourceWidth = mImage.getWidth();
+        final int sourceHeight = mImage.getHeight();
 
         // Compute the scaling factors to fit the new height and width, respectively.
         final float xScale = (float)screenWidth / sourceWidth;
         final float yScale = (float)screenHeight / sourceHeight;
         final float scale;
-        switch (scaleType) {
+        switch (mScaleType) {
             case CROP_TO_WIDTH: // Final scaling will be the width scale
                 scale = xScale;
                 break;
@@ -186,10 +193,10 @@ public class ImageStateDisplay extends AbstractState {
 
         // Finally, we create a new bitmap of the specified size and draw our new,
         // scaled bitmap onto it.
-        Bitmap dest = Bitmap.createBitmap(screenWidth, screenHeight, image.getConfig());
+        Bitmap dest = Bitmap.createBitmap(screenWidth, screenHeight, mImage.getConfig());
         Canvas canvas = new Canvas(dest);
-        canvas.drawBitmap(image, null, targetRect, null);
-        this.image = dest;
+        canvas.drawBitmap(mImage, null, targetRect, null);
+        mImage = dest;
     }
 
     protected static Bitmap drawableToBitmap(Drawable dr) {
@@ -213,31 +220,9 @@ public class ImageStateDisplay extends AbstractState {
         return bitmap;
     }
 
-    private void invalidateImage() {
-        this.imageConfigured = false;
-    }
-
-    private void configureImage(final int width, final int height) {
-        if (!imageConfigured) {
-            switch (scaleType) {
-                case FIT_XY:
-                case FIT_WIDTH:
-                case FIT_HEIGHT:
-                    stretchImage(width, height);
-                    break;
-                case CROP_XY:
-                case CROP_TO_WIDTH:
-                case CROP_TO_HEIGHT:
-                    cropImage(width, height);
-                    break;
-            }
-            imageConfigured = true;
-        }
-    }
-
 
     /**
-     * Internal class to help instantiate {@link ImageStateDisplay}.
+     * Internal class to help instantiate {@link ImageState}.
      */
     public static final class Builder {
         private final Context c;
@@ -297,16 +282,16 @@ public class ImageStateDisplay extends AbstractState {
             return this;
         }
 
-        public ImageStateDisplay build() {
+        public ImageState build() {
             if (image == null) {
                 throw new NullPointerException("Image cannot be null!");
             }
 
-            ImageStateDisplay state = new ImageStateDisplay();
+            ImageState state = new ImageState();
             state.setPadding(padding[0], padding[1], padding[2], padding[3]);
-            state.scaleType = scaleType;
-            state.imageGravity = gravity;
-            state.image = image;
+            state.mScaleType = scaleType;
+            state.mGravity = gravity;
+            state.mImage = image;
             return state;
         }
     }
