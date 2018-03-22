@@ -10,6 +10,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -51,7 +52,9 @@ public class ImageTextStateDisplay extends AbstractStateDisplay {
     }
 
     public ImageTextStateDisplay(Context c, @DrawableRes int res, @NonNull String title, @Nullable String subtitle) {
-        this(c, BitmapFactory.decodeResource(c.getResources(), res), title, subtitle);
+        this(c, ImageUtils.drawableToBitmap(
+                ContextCompat.getDrawable(c, res)), title, subtitle);
+
     }
 
     public ImageTextStateDisplay(Context c, @NonNull Bitmap bitmap, @NonNull String title, @Nullable String subtitle) {
@@ -204,7 +207,8 @@ public class ImageTextStateDisplay extends AbstractStateDisplay {
     }
 
     public void setImage(Context c, @DrawableRes int res) {
-        this.image = BitmapFactory.decodeResource(c.getResources(), res);
+        this.image = ImageUtils.drawableToBitmap(
+                ContextCompat.getDrawable(c, res));
         invalidateConfig();
     }
 
