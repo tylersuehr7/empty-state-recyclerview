@@ -294,7 +294,7 @@ public class TextStateDisplay extends AbstractStateDisplay {
             if ((subtitleLayout.getWidth() + totalNeededPadding) > availableWidth) {
                 this.subtitleLayout = new StaticLayout(subtitle,
                         subtitlePaint,
-                        availableWidth,
+                        availableWidth - totalNeededPadding,
                         Layout.Alignment.ALIGN_NORMAL,
                         1.15f, 0, false);
             }
